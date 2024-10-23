@@ -1,9 +1,11 @@
 ﻿using LinqToTwitter.Common.Entities;
 using Microsoft.Extensions.Options;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 using test.application.Settings;
@@ -23,12 +25,12 @@ namespace test.infraestructure.RepositoryMongo
         {
             await _collection.InsertOneAsync(entity);
         }
-
-        public Task DeleteAsync(string id)
-        {
-            throw new NotImplementedException();
+        public async Task UpdateAsync(string id, T entity){
+            var objectId = ObjectId.Parse(id);
+            var filter = Builders<T>.Filter.Eq("_id", objectId);
+            await _collection.ReplaceOneAsync(filter, entity);
         }
-
+        
         public Task<IEnumerable<T>> GetAllAsync()
         {
             throw new NotImplementedException();
@@ -39,7 +41,7 @@ namespace test.infraestructure.RepositoryMongo
             throw new NotImplementedException();
         }
 
-        public Task UpdateAsync(string id, T entity)
+        public object Find(Func<object, bool> value)
         {
             throw new NotImplementedException();
         }

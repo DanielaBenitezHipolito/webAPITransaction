@@ -10,10 +10,11 @@ namespace test.application.TransactionServices
 {
     public interface ITransactionService
     {
-        string InsertTransaction(TransactionDTO body);
-        string UpdateTransaction(TransactionDTO body);
-        string GetTransactionById(TransactionDTO body);
-        string GetTransactionByStatus(TransactionDTO body);
+
+        Task<string> InsertTransaction(TransactionDTO transactionDTO);
+        Task <string> GetTransactionById(TransactionDTO transactionDTO);
+        Task <string> GetTransactionByStatus(TransactionDTO transactionDTO);
+        Task<string> UpdateTransaction(string id, TransactionDTO transactionDTO);
     }
 
 }

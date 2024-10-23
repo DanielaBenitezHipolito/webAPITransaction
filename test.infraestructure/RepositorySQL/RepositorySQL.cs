@@ -1,16 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using MongoDB.Driver;
 using Nest;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using test.application.Settings;
 using test.domain.interfaces;
+using test.infraestructure.DBContext;
 
-namespace test.infraestructure.NewFolder1
+namespace test.infraestructure.RepositorySQL
 {
     public class RepositorySQL<T> : IRepositorySQL<T> where T : class
     {
@@ -18,15 +13,39 @@ namespace test.infraestructure.NewFolder1
         private readonly DbSet<T> _dbSet;
 
 
-        //public RepositorySQL(IOptions<MongoSettings> settings)
-        //{
-        //    var client = new MongoClient(settings.Value.ConnectionString);
-        //    var database = client.GetDatabase(settings.Value.Database);
-        //    _collection = database.GetCollection<T>(typeof(T).Name);
-        //}
-        public Task AddAsync(T entity)
+        public RepositorySQL(SqlDBContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
+
+            _dbSet = _context.Set<T>();
         }
+        public async Task AddAsync(T entity)
+        {
+            try
+            {
+                await _dbSet.AddAsync(entity);
+
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex) { 
+            }
+            
+        }
+        public async Task UpdateAsync(T entity)
+        {
+            _dbSet.Update(entity);
+            await _context.SaveChangesAsync();
+        }
+        public async Task<IEnumerable<T>> GetAllAsync()
+        {
+            return await _dbSet.ToListAsync();
+        }
+
+        public async Task<T> GetByIdAsync(int id)
+        {
+            return await _dbSet.FindAsync(id);
+        }
+
+        
     }
 }

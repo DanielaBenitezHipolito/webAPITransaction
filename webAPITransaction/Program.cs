@@ -1,13 +1,11 @@
-
-
 using test.application.Settings;
 using test.application.TransactionServices;
 using test.infraestructure.TransactionServices;
 using test.domain.interfaces;
 using test.infraestructure.RepositoryMongo;
 using test.infraestructure.DBContext;
-using Microsoft.Extensions.Options;
 using Microsoft.EntityFrameworkCore;
+using test.infraestructure.RepositorySQL;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,10 +15,15 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddSingleton<ITransactionService, TransactionService>();
+builder.Services.AddScoped<ITransactionService, TransactionService>();
+//Se agrega configuración de Mongo
 builder.Services.Configure<MongoSettings>(builder.Configuration.GetSection("MongoSettings"));
-builder.Services.AddTransient(typeof(IRepositoryMongo<>),typeof(RepositoryMongo<>));
-builder.Services.AddDbContext<SqlDBContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+//Se agrega el servicio de la base de datos para que solo dure durante la transacción
+builder.Services.AddScoped(typeof(IRepositoryMongo<>),typeof(RepositoryMongo<>));
+builder.Services.AddScoped(typeof(IRepositorySQL<>), typeof(RepositorySQL<>));
+//Se agrega el servicio del DbContext
+builder.Services.AddDbContext<SqlDBContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("SQLConnection")));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

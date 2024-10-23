@@ -8,17 +8,24 @@ using test.application.TransactionServices;
 using test.application.DTO;
 using test.domain;
 using test.domain.interfaces;
+using test.application.Commun;
+using Nest;
 
 namespace test.infraestructure.TransactionServices
 {
     public class TransactionService : ITransactionService
     {
         private readonly IRepositoryMongo<Transaction> _transaction;
-        public TransactionService(IRepositoryMongo<Transaction> transaction) {
-            _transaction = transaction;
-        }
-        public string InsertTransaction(TransactionDTO transactionDTO)
+        private readonly IRepositorySQL<Logs> _contextLogs;
+        public TransactionService(IRepositoryMongo<Transaction> transaction, IRepositorySQL<Logs> contextLogs)
         {
+            _transaction = transaction;
+            _contextLogs = contextLogs;
+        }
+
+        public async Task<string> InsertTransaction(TransactionDTO transactionDTO)
+        {
+            var log = new Logs();
             try
             {
                 Transaction transaction = new Transaction();
@@ -27,27 +34,48 @@ namespace test.infraestructure.TransactionServices
                 transaction.Currency = transactionDTO.Currency;
                 transaction.Date = transactionDTO.Date;
                 transaction.Status = transactionDTO.Status;
-                var result = _transaction.AddAsync(transaction);
+
+                log.MessageLog = $"insert transaction Id:{transaction.Id}" +
+                    $" Amount : {transaction.Amount}" +
+                    $" Currency: {transaction.Currency}" +
+                    $" Date: {transaction.Date}" +
+                    $" Status: {transaction.Status}";
+                log.LogLevel = LogLevels.Success200.ToString();
+
+                await _transaction.AddAsync(transaction);
+                log.DateLog = DateTime.Now;
+                await _contextLogs.AddAsync(log);
                 return "Se ha insertado la información con exito";
             }
-            catch
+            catch(Exception ex)
             {
+                log.MessageLog = $"Error: {ex.Message}";
+                log.LogLevel = LogLevels.Error500.ToString();
                 return "";
             }
+            finally
+            {
+
+            }
         }
-        public string GetTransactionById(TransactionDTO body)
+        public async Task<string> UpdateTransaction(string id, TransactionDTO transactionDTO)
+        {
+            Transaction transaction = new Transaction();
+            transaction.Id = ObjectId.Parse(id);
+            transaction.Amount = transactionDTO.Amount;
+            transaction.Currency = transactionDTO.Currency;
+            transaction.Date = transactionDTO.Date;
+            transaction.Status = transactionDTO.Status;
+            await _transaction.UpdateAsync(id,transaction);
+            return "ok";
+        }
+
+        Task<string> ITransactionService.GetTransactionById(TransactionDTO transactionDTO)
         {
             throw new NotImplementedException();
         }
 
-        public string GetTransactionByStatus(TransactionDTO body)
-        {
-            throw new NotImplementedException();
-        }
-
-        
-
-        public string UpdateTransaction(TransactionDTO body)
+        Task<string> ITransactionService.GetTransactionByStatus(TransactionDTO transactionDTO)
         {
             throw new NotImplementedException();
         }

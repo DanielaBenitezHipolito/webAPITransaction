@@ -1,21 +1,31 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
+using test.application.DTO;
 using test.application.Settings;
 using test.domain;
 
 namespace test.infraestructure.DBContext
 {
+
     public class SqlDBContext : DbContext
     {
-        private readonly SQLSettings _settings;
+        private readonly string _connectionString;
 
-        public SqlDBContext(DbContextOptions<SqlDBContext> options) : base(options) { }
+        public SqlDBContext(DbContextOptions<SqlDBContext> options/*, IOptions<SQLConnection> settings*/)
+            : base(options)
+        {
+            //_connectionString = settings.Value.ConnectionString;
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            //if (!optionsBuilder.IsConfigured)
+            //{
+            //    optionsBuilder.UseSqlServer(_connectionString);
+            //}
+        }
+
         public DbSet<Logs> Logs { get; set; }
-
-       
     }
+
 }

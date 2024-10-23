@@ -3,6 +3,7 @@ using System.Net.Http.Headers;
 using test.application.TransactionServices;
 using test.application.DTO;
 using test.domain;
+using Nest;
 
 namespace webAPITransaction.Controllers
 {
@@ -20,16 +21,23 @@ namespace webAPITransaction.Controllers
 
         [HttpPost]
         [Route("transactionsPOST")]
-        public ActionResult PostTransaction([FromBody] TransactionDTO transaction)
+        public async Task<ActionResult> PostTransaction([FromBody] TransactionDTO transaction)
         {
-            var result = _TransactionDocumentService.InsertTransaction(transaction);
+            var result = await _TransactionDocumentService.InsertTransaction(transaction);
             return Ok("El endpoint funciona");
         }
 
         [HttpPut("/{id}")]
-        public string Put()
+        public async Task<IActionResult> Update(string id, TransactionDTO transaction)
         {
-            return "El endpoint funciona";
+
+            var result = await _TransactionDocumentService.UpdateTransaction(id,transaction);
+
+            if (string.IsNullOrEmpty(result))
+    {
+        return NotFound(new { Message = $"Transaction with id {id} not found." });
+    }
+            return Ok(result);
         }
 
         [HttpGet("/{id}")]

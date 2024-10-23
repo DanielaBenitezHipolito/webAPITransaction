@@ -13,5 +13,6 @@ namespace test.domain.interfaces
         Task<IEnumerable<T>> GetAllAsync();
         Task AddAsync(T entity);
         Task UpdateAsync(string id, T entity);
+        object Find(Func<object, bool> value);
     }   
 }

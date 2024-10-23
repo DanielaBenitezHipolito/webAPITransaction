@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace test.application.Settings
 {
-    public class SQLSettings
+    public class SQLConnection
     {
         public string? ConnectionString { get; set; }
-        public string? Database { get; set; }
+        //public string? Database { get; set; }
     }
 }
