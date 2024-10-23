@@ -1,0 +1,15 @@
+C:\Users\hbenitez\source\repos\webAPITransaction\test.application\bin\Debug\net8.0\test.application.deps.json
+C:\Users\hbenitez\source\repos\webAPITransaction\test.application\bin\Debug\net8.0\test.application.dll
+C:\Users\hbenitez\source\repos\webAPITransaction\test.application\bin\Debug\net8.0\test.application.pdb
+C:\Users\hbenitez\source\repos\webAPITransaction\test.application\obj\Debug\net8.0\test.application.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\hbenitez\source\repos\webAPITransaction\test.application\obj\Debug\net8.0\test.application.AssemblyInfoInputs.cache
+C:\Users\hbenitez\source\repos\webAPITransaction\test.application\obj\Debug\net8.0\test.application.AssemblyInfo.cs
+C:\Users\hbenitez\source\repos\webAPITransaction\test.application\obj\Debug\net8.0\test.application.csproj.CoreCompileInputs.cache
+C:\Users\hbenitez\source\repos\webAPITransaction\test.application\obj\Debug\net8.0\test.application.dll
+C:\Users\hbenitez\source\repos\webAPITransaction\test.application\obj\Debug\net8.0\refint\test.application.dll
+C:\Users\hbenitez\source\repos\webAPITransaction\test.application\obj\Debug\net8.0\test.application.pdb
+C:\Users\hbenitez\source\repos\webAPITransaction\test.application\obj\Debug\net8.0\ref\test.application.dll
+C:\Users\hbenitez\source\repos\webAPITransaction\test.application\obj\Debug\net8.0\test.application.csproj.AssemblyReference.cache
+C:\Users\hbenitez\source\repos\webAPITransaction\test.application\bin\Debug\net8.0\test.domain.dll
+C:\Users\hbenitez\source\repos\webAPITransaction\test.application\bin\Debug\net8.0\test.domain.pdb
+C:\Users\hbenitez\source\repos\webAPITransaction\test.application\obj\Debug\net8.0\test.app.68D052D5.Up2Date
