@@ -54,17 +54,31 @@ namespace test.infraestructure.TransactionServices
         }
         public async Task<string> UpdateTransaction(string id, TransactionDTO transactionDTO)
         {
-            Transaction transaction = new Transaction();
-            transaction.Id = ObjectId.Parse(id);
-            transaction.Amount = transactionDTO.Amount;
-            transaction.Currency = transactionDTO.Currency;
-            transaction.Date = transactionDTO.Date;
-            transaction.Status = transactionDTO.Status;
-            await _transaction.UpdateAsync(id,transaction);
-            return "ok";
+            if (string.IsNullOrEmpty(id) || id.Length != 24 || !ObjectId.TryParse(id, out var objectId))
+            {
+                return null;
+            }
+            var result = await _transaction.GetByIdAsync(id);
+            if (result == null)
+            {
+                return null;
+            }
+                result.Id = ObjectId.Parse(id);
+                result.Amount = transactionDTO.Amount;
+                result.Currency = transactionDTO.Currency;
+                result.Date = transactionDTO.Date;
+                result.Status = transactionDTO.Status;
+
+            await _transaction.UpdateAsync(id, result);
+            return "Se actualizo el registro correctamente";
         }
+
         public async Task<Transaction> GetTransactionById(string id)
         {
+            if (string.IsNullOrEmpty(id) || id.Length != 24 || !ObjectId.TryParse(id, out var objectId))
+            {
+                return null;
+            }
             var transaction = await _transaction.GetByIdAsync(id);
             if (transaction == null)
             {

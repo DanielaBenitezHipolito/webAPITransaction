@@ -12,8 +12,8 @@ namespace test.application.TransactionServices
     {
 
         Task<string> InsertTransaction(TransactionDTO transactionDTO);
-        Task <string> GetTransactionById(TransactionDTO transactionDTO);
-        Task <string> GetTransactionByStatus(TransactionDTO transactionDTO);
+        Task <Transaction> GetTransactionById(string id);
+        Task<IEnumerable<Transaction>> GetTransactionByStatus(string status);
         Task<string> UpdateTransaction(string id, TransactionDTO transactionDTO);
     }
 
