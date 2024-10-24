@@ -1,13 +1,7 @@
-﻿using LinqToTwitter.Common.Entities;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata;
-using System.Text;
-using System.Threading.Tasks;
+using Nest;
 using test.application.Settings;
 using test.domain.interfaces;
 
@@ -30,20 +24,19 @@ namespace test.infraestructure.RepositoryMongo
             var filter = Builders<T>.Filter.Eq("_id", objectId);
             await _collection.ReplaceOneAsync(filter, entity);
         }
-        
-        public Task<IEnumerable<T>> GetAllAsync()
+        public async Task<T> GetByIdAsync(string id)
         {
-            throw new NotImplementedException();
+            var objectId = ObjectId.Parse(id);
+            var filter = Builders<T>.Filter.Eq("_id", objectId);
+            var result = await _collection.Find(filter).FirstOrDefaultAsync();
+            return result;
         }
 
-        public Task<T> GetByIdAsync(string id)
+        public async Task<IEnumerable<T>> GetByStatusAsync(string status)
         {
-            throw new NotImplementedException();
-        }
-
-        public object Find(Func<object, bool> value)
-        {
-            throw new NotImplementedException();
+            var filter = Builders<T>.Filter.Eq("Status", status);
+            var result = await _collection.Find(filter).ToListAsync();
+            return result;
         }
     }
 

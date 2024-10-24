@@ -1,9 +1,4 @@
 ﻿using MongoDB.Bson;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using test.application.TransactionServices;
 using test.application.DTO;
 using test.domain;
@@ -22,7 +17,6 @@ namespace test.infraestructure.TransactionServices
             _transaction = transaction;
             _contextLogs = contextLogs;
         }
-
         public async Task<string> InsertTransaction(TransactionDTO transactionDTO)
         {
             var log = new Logs();
@@ -69,15 +63,26 @@ namespace test.infraestructure.TransactionServices
             await _transaction.UpdateAsync(id,transaction);
             return "ok";
         }
-
-        Task<string> ITransactionService.GetTransactionById(TransactionDTO transactionDTO)
+        public async Task<Transaction> GetTransactionById(string id)
         {
-            throw new NotImplementedException();
+            var transaction = await _transaction.GetByIdAsync(id);
+            if (transaction == null)
+            {
+                throw new KeyNotFoundException($"Transaction with id {id} not found");
+            }
+            
+            return transaction;
+        }
+        public async Task<IEnumerable<Transaction>> GetTransactionByStatus(string status)
+        {
+            var transaction = await _transaction.GetByStatusAsync(status);
+            if (!transaction.Any())
+            {
+                return Enumerable.Empty<Transaction>();
+            }
+
+            return transaction;
         }
 
-        Task<string> ITransactionService.GetTransactionByStatus(TransactionDTO transactionDTO)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
